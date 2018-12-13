@@ -12,6 +12,10 @@ from common.graph_to_matrix import build_matrix
 from common.tools import Rank
 from common.tools import print_with_time
 
+from common.gpu import solve_gpu
+
+def solve_cpu(A, b, initial_x):
+    return scipy.sparse.linalg.bicgstab(A, b, x0=initial_x, tol=1e-3)
 
 def calculate_spring_rank(A, initial_x=None):
     """
@@ -66,13 +70,9 @@ def calculate_spring_rank(A, initial_x=None):
         iterations += 1
 
     print_with_time("Solving Bx=b equation using 'bicgstab' iterative method")
-    result = scipy.sparse.linalg.bicgstab(B, b, x0=initial_x, callback=bicgstab_callback, tol=1e-3)
+    result = solve_gpu(B, b, initial_x)
 
-    if result[1] != 0:
-        print_with_time("Can't solve Bx=b")
-        raise ArithmeticError("Can't solve Bx=b")
-
-    return iterations, result[0]
+    return iterations, result
 
 
 def update_rank(graph: DiGraph, rank: Rank, new_edges: List[Edge]) -> (int, Rank):

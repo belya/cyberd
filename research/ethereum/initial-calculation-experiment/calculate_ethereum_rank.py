@@ -38,14 +38,14 @@ print("-----------------------------------------------")
 
 iterations, raw_rank = calculate_spring_rank(A)  # raw rank is array with values, where indices is nodes list indices
 rank = dict(zip(nodes, raw_rank))
-print_with_time(f"Spring Rank calculated in {iterations} iterations")
+print_with_time("Spring Rank calculated")
 print("-----------------------------------------------")
 
 print("Storing results")
 initial_rank_file = open("../result/calculated-rank", "w")
 
 for node, node_rank in sorted(rank.items(), key=lambda kv: kv[1], reverse=True):
-    initial_rank_file.write(f"{node} {node_rank}\r\n")
+    initial_rank_file.write("{node} {node_rank}\r\n".format(node=node, node_rank=node_rank))
 initial_rank_file.close()
 print("-----------------------------------------------")
 
@@ -54,6 +54,6 @@ v, vp, ws = calculate_violations(A, raw_rank)
 mv, mvp = calculate_min_violations(A)
 ve, vep, H = calculate_system_violated_energy(A, raw_rank)
 
-print(f"Violations: {v} [{vp}%] :: min violations: {mv} [{mvp}%]. Sum Aij: {ws}")
-print(f"Violation energy: {ve} [{vep}%] :: total energy: {H}")
+print("Violations: {v} [{vp}%] :: min violations: {mv} [{mvp}%]. Sum Aij: {ws}".format(v=v, vp=vp, mv=mv, mvp=mvp, ws=ws))
+print("Violation energy: {ve} [{vep}%] :: total energy: {H}".format(ve=ve, vep=vep, H=H))
 print("-----------------------------------------------")
