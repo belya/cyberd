@@ -1,5 +1,6 @@
 import pyamgx
 import numpy as np
+import atexit
 
 def get_config():
     return pyamgx.Config().create_from_dict({
@@ -16,13 +17,7 @@ def get_config():
         }
     })
 
-def solve_gpu(A_value, b_value, initial_x=None, finalize=True):
-    A = pyamgx.Matrix().create(resource)
-    b = pyamgx.Vector().create(resource)
-    x = pyamgx.Vector().create(resource)
-
-    solver = pyamgx.Solver().create(resource, config)
-
+def solve_gpu(A_value, b_value, initial_x=None):
     if initial_x:
         solution = initial_x
     else:
@@ -37,6 +32,10 @@ def solve_gpu(A_value, b_value, initial_x=None, finalize=True):
 
     x.download(solution)
 
+    return solution, 0
+
+@atexit.register
+def unload():
     A.destroy()
     x.destroy()
     b.destroy()
@@ -44,11 +43,13 @@ def solve_gpu(A_value, b_value, initial_x=None, finalize=True):
     resource.destroy()
     config.destroy()
 
-    if finalize:
-        pyamgx.finalize()
-
-    return solution
+    pyamgx.finalize()
 
 pyamgx.initialize()
 config = get_config()
 resource = pyamgx.Resources().create_simple(config)
+A = pyamgx.Matrix().create(resource)
+b = pyamgx.Vector().create(resource)
+x = pyamgx.Vector().create(resource)
+
+solver = pyamgx.Solver().create(resource, config)

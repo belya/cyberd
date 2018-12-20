@@ -49,11 +49,11 @@ for node, node_rank in sorted(rank.items(), key=lambda kv: kv[1], reverse=True):
 initial_rank_file.close()
 print("-----------------------------------------------")
 
-print("Calculate violations")
-v, vp, ws = calculate_violations(A, raw_rank)
-mv, mvp = calculate_min_violations(A)
-ve, vep, H = calculate_system_violated_energy(A, raw_rank)
+# print("Calculate violations")
+# v, vp, ws = calculate_violations(A, raw_rank)
+# mv, mvp = calculate_min_violations(A)
+# ve, vep, H = calculate_system_violated_energy(A, raw_rank)
 
-print("Violations: {v} [{vp}%] :: min violations: {mv} [{mvp}%]. Sum Aij: {ws}".format(v=v, vp=vp, mv=mv, mvp=mvp, ws=ws))
-print("Violation energy: {ve} [{vep}%] :: total energy: {H}".format(ve=ve, vep=vep, H=H))
-print("-----------------------------------------------")
+# print("Violations: {v} [{vp}%] :: min violations: {mv} [{mvp}%]. Sum Aij: {ws}".format(v=v, vp=vp, mv=mv, mvp=mvp, ws=ws))
+# print("Violation energy: {ve} [{vep}%] :: total energy: {H}".format(ve=ve, vep=vep, H=H))
+# print("-----------------------------------------------")

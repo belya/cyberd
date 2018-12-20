@@ -17,7 +17,7 @@ from common.gpu import solve_gpu
 def solve_cpu(A, b, initial_x):
     return scipy.sparse.linalg.bicgstab(A, b, x0=initial_x, tol=1e-3)
 
-def calculate_spring_rank(A, initial_x=None):
+def calculate_spring_rank(A, initial_x=None, alpha=0):
     """
     Main routine to calculate SpringRank by solving linear system.
     Default parameters are initialized as in the standard SpringRank model.
@@ -55,7 +55,7 @@ def calculate_spring_rank(A, initial_x=None):
     A_o = A + A.transpose() + A_N_j + A_j_N
 
     print_with_time("Calculating B ....")
-    B = D_out + D_int - A_o
+    B = D_out + D_int - A_o + alpha * scipy.sparse.eye(N)
     size_of_B = humanize.naturalsize(B.data.nbytes + B.indptr.nbytes + B.indices.nbytes)
     print_with_time("Matrix B takes {} RAM".format(size_of_B))
 
@@ -70,7 +70,7 @@ def calculate_spring_rank(A, initial_x=None):
         iterations += 1
 
     print_with_time("Solving Bx=b equation using 'bicgstab' iterative method")
-    result = solve_gpu(B, b, initial_x)
+    result, iterations = solve_gpu(B, b, initial_x)
 
     return iterations, result
 
